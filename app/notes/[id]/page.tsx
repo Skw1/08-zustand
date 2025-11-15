@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       siteName: 'NoteHub',
       images: [
         {
-          url: 'https://placehold.co/1200x630',
+          url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
           width: 1200,
           height: 630,
           alt: note.title,
