@@ -8,13 +8,7 @@ import type { NotePost } from '@/types/note';
 
 import css from './NoteForm.module.css';
 
-const tags: NotePost['tag'][] = [
-  'Todo',
-  'Work',
-  'Personal',
-  'Meeting',
-  'Shopping',
-];
+const tags: NotePost['tag'][] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 
 export default function NoteForm() {
   const router = useRouter();
@@ -49,7 +43,14 @@ export default function NoteForm() {
   };
 
   return (
-    <form className={css.form} action={handleSubmit}>
+    <form
+      className={css.form}
+      onSubmit={e => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        handleSubmit(formData);
+      }}
+    >
       <div className={css.formGroup}>
         <label htmlFor="title">Title</label>
         <input
@@ -93,19 +94,11 @@ export default function NoteForm() {
       </div>
 
       <div className={css.actions}>
-        <button
-          type="button"
-          className={css.cancelButton}
-          onClick={handleCancel}
-        >
+        <button type="button" className={css.cancelButton} onClick={handleCancel}>
           Cancel
         </button>
 
-        <button
-          type="submit"
-          className={css.submitButton}
-          disabled={isPending}
-        >
+        <button type="submit" className={css.submitButton} disabled={isPending}>
           Create note
         </button>
       </div>

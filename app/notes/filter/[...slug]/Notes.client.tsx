@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from "react";
-import { useDebounce } from "use-debounce";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { fetchNotes } from "@/lib/api";
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { fetchNotes } from '@/lib/api';
 
-import NoteList from "@/components/NoteList/NoteList";
-import NoteModal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
-import SearchBox from "@/components/SearchBox/SearchBox";
-import Pagination from "@/components/Pagination/Pagination";
+import NoteList from '@/components/NoteList/NoteList';
+import NoteModal from '@/components/Modal/Modal';
+import NoteForm from '@/components/NoteForm/NoteForm';
+import SearchBox from '@/components/SearchBox/SearchBox';
+import Pagination from '@/components/Pagination/Pagination';
+import Link from 'next/link';
 
-import css from "./NotesPage.module.css";
+import css from './NotesPage.module.css';
 
 interface NotesClientProps {
   tag: string;
@@ -19,12 +20,12 @@ interface NotesClientProps {
 
 export default function NotesClient({ tag }: NotesClientProps) {
   const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, debouncedSearchTerm, tag],
+    queryKey: ['notes', page, debouncedSearchTerm, tag],
     queryFn: () => fetchNotes(debouncedSearchTerm, page, tag),
     placeholderData: keepPreviousData,
     staleTime: 5000,
@@ -36,22 +37,15 @@ export default function NotesClient({ tag }: NotesClientProps) {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox
-          searchQuery={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <SearchBox searchQuery={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
 
         {totalPages > 1 && (
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            setCurrentPage={setPage}
-          />
+          <Pagination currentPage={page} totalPages={totalPages} setCurrentPage={setPage} />
         )}
 
-        <button className={css.button} onClick={() => setIsModalOpen(true)}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
+        </Link>
       </header>
 
       <main>
