@@ -7,8 +7,10 @@ interface NoteDetailsPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { id } = params;
+export async function generateMetadata(
+  params: Promise<{ id: string }>
+): Promise<Metadata> {
+  const { id } = await params;
   const note = await fetchNoteById(id);
 
   return {

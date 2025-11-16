@@ -1,8 +1,11 @@
 import { fetchNotes } from '@/lib/api';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import NotesClient from './Notes.client';
+import { Metadata } from 'next';
 
-export async function generateMetadata(props: { params: Promise<{ slug: string[] }> }) {
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string[] }> }
+): Promise<Metadata> {
   const { slug } = await props.params;
   const filter = slug?.[0] ?? 'all';
   const readableFilter =

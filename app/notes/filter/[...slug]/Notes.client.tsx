@@ -6,8 +6,6 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { fetchNotes } from '@/lib/api';
 
 import NoteList from '@/components/NoteList/NoteList';
-import NoteModal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import Link from 'next/link';
@@ -22,7 +20,11 @@ export default function NotesClient({ tag }: NotesClientProps) {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setPage(1);
+  };
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', page, debouncedSearchTerm, tag],
@@ -37,7 +39,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox searchQuery={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+        <SearchBox searchQuery={searchTerm} onChange={handleSearchChange} />
 
         {totalPages > 1 && (
           <Pagination currentPage={page} totalPages={totalPages} setCurrentPage={setPage} />
@@ -59,12 +61,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
           <NoteList notes={notes} />
         )}
       </main>
-
-      {isModalOpen && (
-        <NoteModal onClose={() => setIsModalOpen(false)}>
-          <NoteForm />
-        </NoteModal>
-      )}
     </div>
   );
 }
